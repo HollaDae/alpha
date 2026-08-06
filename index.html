@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alpha</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: white;
+      background:
+        radial-gradient(circle at top right, #312e81 0, transparent 35%),
+        linear-gradient(180deg, #09090b, #111827);
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px;
+      position: sticky;
+      top: 0;
+      background: rgba(9, 9, 11, 0.88);
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 3px;
+    }
+
+    .logo span {
+      color: #a78bfa;
+    }
+
+    main {
+      padding: 22px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .hero {
+      padding: 50px 0 30px;
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 8vw, 76px);
+      line-height: 0.95;
+      margin: 0 0 18px;
+    }
+
+    .hero p {
+      max-width: 620px;
+      color: #cbd5e1;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 18px 0;
+    }
+
+    .tabs button {
+      border: 1px solid #3f3f46;
+      background: #18181b;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 999px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .tabs button.active {
+      background: #7c3aed;
+      border-color: #7c3aed;
+    }
+
+    h2 {
+      margin-top: 38px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      min-height: 250px;
+      padding: 20px;
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background:
+        linear-gradient(180deg, transparent, rgba(0,0,0,.9)),
+        linear-gradient(135deg, #4338ca, #be185d);
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+    }
+
+    .card:nth-child(2) {
+      background:
+        linear-gradient(180deg, transparent, rgba(0,0,0,.9)),
+        linear-gradient(135deg, #0369a1, #14b8a6);
+    }
+
+    .card:nth-child(3) {
+      background:
+        linear-gradient(180deg, transparent, rgba(0,0,0,.9)),
+        linear-gradient(135deg, #b45309, #dc2626);
+    }
+
+    .card:nth-child(4) {
+      background:
+        linear-gradient(180deg, transparent, rgba(0,0,0,.9)),
+        linear-gradient(135deg, #374151, #7c3aed);
+    }
+
+    .tag {
+      width: fit-content;
+      padding: 6px 10px;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(255,255,255,.18);
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+
+    .card p {
+      margin: 0;
+      color: #e4e4e7;
+    }
+
+    footer {
+      padding: 45px 22px;
+      color: #71717a;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">ALPH<span>A</span></div>
+    <div>☰</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Find your next obsession.</h1>
+      <p>
+        Discover what is trending, what just dropped, what is coming soon,
+        and what is leaving your favorite streaming services.
+      </p>
+    </section>
+
+    <nav class="tabs">
+      <button class="active">Trending</button>
+      <button>New</button>
+      <button>Coming Soon</button>
+      <button>Leaving Soon</button>
+      <button>News</button>
+    </nav>
+
+    <h2>Trending Now</h2>
+
+    <section class="grid">
+      <article class="card">
+        <div class="tag">Trending #1</div>
+        <h3>Featured Movie</h3>
+        <p>Streaming tonight</p>
+      </article>
+
+      <article class="card">
+        <div class="tag">Just Added</div>
+        <h3>New Series</h3>
+        <p>Season one available now</p>
+      </article>
+
+      <article class="card">
+        <div class="tag">Coming Soon</div>
+        <h3>Big Premiere</h3>
+        <p>Arriving this weekend</p>
+      </article>
+
+      <article class="card">
+        <div class="tag">Leaving Soon</div>
+        <h3>Last Chance</h3>
+        <p>Watch before it disappears</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    Alpha — entertainment without the endless scrolling.
+  </footer>
+</body>
+</html>
