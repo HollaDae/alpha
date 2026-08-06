@@ -10,146 +10,242 @@
       box-sizing: border-box;
     }
 
+    :root {
+      color-scheme: dark;
+      --background: #09090d;
+      --panel: #14141c;
+      --muted: #a1a1aa;
+      --purple: #7c3aed;
+      --purple-light: #a78bfa;
+    }
+
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
       color: white;
       background:
-        radial-gradient(circle at top right, #312e81 0, transparent 35%),
-        linear-gradient(180deg, #09090b, #111827);
-      min-height: 100vh;
+        radial-gradient(circle at 85% 10%, rgba(76, 29, 149, 0.5), transparent 32%),
+        linear-gradient(180deg, #09090d, #101827);
+    }
+
+    button {
+      font: inherit;
     }
 
     header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 22px;
-      position: sticky;
-      top: 0;
-      background: rgba(9, 9, 11, 0.88);
-      backdrop-filter: blur(12px);
+      padding: 20px clamp(20px, 4vw, 60px);
+      background: rgba(9, 9, 13, 0.88);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(16px);
     }
 
     .logo {
-      font-size: 28px;
+      font-size: 27px;
       font-weight: 900;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
     }
 
     .logo span {
-      color: #a78bfa;
+      color: var(--purple-light);
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: 13px;
     }
 
     main {
-      padding: 22px;
-      max-width: 1100px;
+      width: min(1300px, 100%);
       margin: auto;
+      padding: 45px clamp(20px, 4vw, 60px) 70px;
     }
 
     .hero {
-      padding: 50px 0 30px;
+      max-width: 850px;
+      padding: 30px 0 20px;
     }
 
     .hero h1 {
-      font-size: clamp(38px, 8vw, 76px);
-      line-height: 0.95;
       margin: 0 0 18px;
+      font-size: clamp(46px, 8vw, 90px);
+      line-height: 0.95;
+      letter-spacing: -4px;
     }
 
     .hero p {
-      max-width: 620px;
+      max-width: 680px;
+      margin: 0;
       color: #cbd5e1;
-      font-size: 18px;
-      line-height: 1.6;
+      font-size: clamp(17px, 2vw, 21px);
+      line-height: 1.55;
     }
 
     .tabs {
       display: flex;
       gap: 10px;
       overflow-x: auto;
-      padding: 18px 0;
+      padding: 30px 0 22px;
+      scrollbar-width: none;
     }
 
-    .tabs button {
-      border: 1px solid #3f3f46;
-      background: #18181b;
-      color: white;
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      flex: 0 0 auto;
       padding: 12px 18px;
+      color: white;
+      background: #18181f;
+      border: 1px solid #3f3f46;
       border-radius: 999px;
-      white-space: nowrap;
       cursor: pointer;
+      transition: 0.2s ease;
     }
 
-    .tabs button.active {
-      background: #7c3aed;
-      border-color: #7c3aed;
+    .tab:hover {
+      border-color: var(--purple-light);
+      transform: translateY(-1px);
     }
 
-    h2 {
-      margin-top: 38px;
+    .tab.active {
+      background: var(--purple);
+      border-color: var(--purple);
+      box-shadow: 0 8px 25px rgba(124, 58, 237, 0.35);
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(27px, 4vw, 38px);
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      gap: 22px;
     }
 
     .card {
-      min-height: 250px;
-      padding: 20px;
-      border-radius: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      background:
-        linear-gradient(180deg, transparent, rgba(0,0,0,.9)),
-        linear-gradient(135deg, #4338ca, #be185d);
-      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+      position: relative;
+      min-height: 360px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      background: var(--panel);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.3);
+      transition: transform 0.25s ease, border-color 0.25s ease;
     }
 
-    .card:nth-child(2) {
-      background:
-        linear-gradient(180deg, transparent, rgba(0,0,0,.9)),
-        linear-gradient(135deg, #0369a1, #14b8a6);
+    .card:hover {
+      transform: translateY(-7px);
+      border-color: rgba(167, 139, 250, 0.65);
     }
 
-    .card:nth-child(3) {
-      background:
-        linear-gradient(180deg, transparent, rgba(0,0,0,.9)),
-        linear-gradient(135deg, #b45309, #dc2626);
+    .poster {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      display: block;
+      object-fit: cover;
+      background: linear-gradient(135deg, #312e81, #9d174d);
     }
 
-    .card:nth-child(4) {
-      background:
-        linear-gradient(180deg, transparent, rgba(0,0,0,.9)),
-        linear-gradient(135deg, #374151, #7c3aed);
-    }
-
-    .tag {
-      width: fit-content;
-      padding: 6px 10px;
-      margin-bottom: 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      background: rgba(255,255,255,.18);
+    .card-content {
+      padding: 15px;
     }
 
     .card h3 {
-      margin: 0 0 6px;
-      font-size: 22px;
+      margin: 0 0 7px;
+      font-size: 18px;
+      line-height: 1.2;
     }
 
-    .card p {
-      margin: 0;
-      color: #e4e4e7;
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .rating {
+      color: #fde047;
+      white-space: nowrap;
+    }
+
+    .message {
+      grid-column: 1 / -1;
+      padding: 45px 25px;
+      color: var(--muted);
+      text-align: center;
+      background: rgba(24, 24, 31, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+    }
+
+    .retry {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 10px 16px;
+      color: white;
+      background: var(--purple);
+      border: 0;
+      border-radius: 999px;
+      cursor: pointer;
     }
 
     footer {
-      padding: 45px 22px;
+      padding: 35px 20px;
       color: #71717a;
       text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        letter-spacing: -2px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 13px;
+      }
+
+      .card {
+        min-height: 0;
+        border-radius: 15px;
+      }
+
+      .card-content {
+        padding: 12px;
+      }
+
+      .card h3 {
+        font-size: 15px;
+      }
+
+      .meta {
+        display: block;
+        line-height: 1.5;
+      }
     }
   </style>
 </head>
@@ -157,57 +253,186 @@
 <body>
   <header>
     <div class="logo">ALPH<span>A</span></div>
-    <div>☰</div>
+    <div class="status" id="status">Entertainment discovery</div>
   </header>
 
   <main>
     <section class="hero">
       <h1>Find your next obsession.</h1>
       <p>
-        Discover what is trending, what just dropped, what is coming soon,
-        and what is leaving your favorite streaming services.
+        Real movies and television, updated from TMDB. Explore what is
+        trending, newly released, coming soon, popular on TV, and top rated.
       </p>
     </section>
 
-    <nav class="tabs">
-      <button class="active">Trending</button>
-      <button>New</button>
-      <button>Coming Soon</button>
-      <button>Leaving Soon</button>
-      <button>News</button>
+    <nav class="tabs" aria-label="Entertainment categories">
+      <button class="tab active" data-category="trending" data-title="Trending Now">
+        Trending
+      </button>
+
+      <button class="tab" data-category="new" data-title="New Movies">
+        New
+      </button>
+
+      <button class="tab" data-category="upcoming" data-title="Coming Soon">
+        Coming Soon
+      </button>
+
+      <button class="tab" data-category="tv" data-title="Popular TV">
+        Popular TV
+      </button>
+
+      <button class="tab" data-category="top" data-title="Top Rated">
+        Top Rated
+      </button>
     </nav>
 
-    <h2>Trending Now</h2>
+    <section class="section-heading">
+      <div>
+        <h2 id="sectionTitle">Trending Now</h2>
+        <p id="sectionSubtitle">What people are watching today</p>
+      </div>
+    </section>
 
-    <section class="grid">
-      <article class="card">
-        <div class="tag">Trending #1</div>
-        <h3>Featured Movie</h3>
-        <p>Streaming tonight</p>
-      </article>
-
-      <article class="card">
-        <div class="tag">Just Added</div>
-        <h3>New Series</h3>
-        <p>Season one available now</p>
-      </article>
-
-      <article class="card">
-        <div class="tag">Coming Soon</div>
-        <h3>Big Premiere</h3>
-        <p>Arriving this weekend</p>
-      </article>
-
-      <article class="card">
-        <div class="tag">Leaving Soon</div>
-        <h3>Last Chance</h3>
-        <p>Watch before it disappears</p>
-      </article>
+    <section class="grid" id="results">
+      <div class="message">Loading Alpha…</div>
     </section>
   </main>
 
   <footer>
-    Alpha — entertainment without the endless scrolling.
+    Alpha uses TMDB data and images but is not endorsed or certified by TMDB.
   </footer>
+
+  <script>
+    const results = document.getElementById("results");
+    const sectionTitle = document.getElementById("sectionTitle");
+    const sectionSubtitle = document.getElementById("sectionSubtitle");
+    const statusText = document.getElementById("status");
+    const tabs = document.querySelectorAll(".tab");
+
+    const subtitles = {
+      trending: "What people are watching today",
+      new: "Movies currently reaching audiences",
+      upcoming: "Movies headed your way",
+      tv: "Television audiences cannot stop watching",
+      top: "The highest-rated movies on TMDB"
+    };
+
+    function escapeHTML(value = "") {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return "Date unavailable";
+
+      const date = new Date(`${dateString}T00:00:00`);
+
+      if (Number.isNaN(date.getTime())) {
+        return dateString;
+      }
+
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+    }
+
+    function renderCards(items) {
+      if (!Array.isArray(items) || items.length === 0) {
+        results.innerHTML =
+          '<div class="message">No titles were returned for this category.</div>';
+        return;
+      }
+
+      results.innerHTML = items.map((item) => {
+        const title = escapeHTML(item.title || item.name || "Untitled");
+        const date = item.release_date || item.first_air_date || "";
+        const rating = Number(item.vote_average || 0).toFixed(1);
+
+        const poster = item.poster_path
+          ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+          : "";
+
+        const posterMarkup = poster
+          ? `<img
+               class="poster"
+               src="${poster}"
+               alt="${title} poster"
+               loading="lazy"
+             />`
+          : '<div class="poster"></div>';
+
+        return `
+          <article class="card">
+            ${posterMarkup}
+
+            <div class="card-content">
+              <h3>${title}</h3>
+
+              <div class="meta">
+                <span>${formatDate(date)}</span>
+                <span class="rating">★ ${rating}</span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function loadCategory(category, title) {
+      results.innerHTML = '<div class="message">Loading titles…</div>';
+      sectionTitle.textContent = title;
+      sectionSubtitle.textContent = subtitles[category] || "";
+      statusText.textContent = "Updating…";
+
+      try {
+        const response = await fetch(
+          `/api/tmdb?category=${encodeURIComponent(category)}`
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Unable to load entertainment data.");
+        }
+
+        renderCards(data.results);
+        statusText.textContent = "Live TMDB data";
+      } catch (error) {
+        console.error(error);
+
+        statusText.textContent = "Connection error";
+
+        results.innerHTML = `
+          <div class="message">
+            Alpha could not load the titles yet.
+            <br />
+            ${escapeHTML(error.message)}
+            <br />
+            <button class="retry" onclick="loadCategory('${category}', '${title}')">
+              Try again
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((button) => button.classList.remove("active"));
+        tab.classList.add("active");
+
+        loadCategory(tab.dataset.category, tab.dataset.title);
+      });
+    });
+
+    loadCategory("trending", "Trending Now");
+  </script>
 </body>
 </html>
