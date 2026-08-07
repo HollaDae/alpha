@@ -14,9 +14,14 @@
       color-scheme: dark;
       --background: #09090d;
       --panel: #14141c;
+      --panel-light: #20202a;
       --muted: #a1a1aa;
       --purple: #7c3aed;
       --purple-light: #a78bfa;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -29,14 +34,23 @@
         linear-gradient(180deg, #09090d, #101827);
     }
 
-    button {
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    button,
+    a {
       font: inherit;
+    }
+
+    button {
+      color: inherit;
     }
 
     header {
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -135,7 +149,7 @@
     }
 
     .section-heading p {
-      margin: 0;
+      margin: 4px 0 0;
       color: var(--muted);
     }
 
@@ -147,18 +161,28 @@
 
     .card {
       position: relative;
-      min-height: 360px;
+      min-width: 0;
+      padding: 0;
       overflow: hidden;
+      color: white;
+      text-align: left;
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 20px;
       background: var(--panel);
       box-shadow: 0 18px 45px rgba(0, 0, 0, 0.3);
-      transition: transform 0.25s ease, border-color 0.25s ease;
+      cursor: pointer;
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
     }
 
-    .card:hover {
+    .card:hover,
+    .card:focus-visible {
       transform: translateY(-7px);
       border-color: rgba(167, 139, 250, 0.65);
+      box-shadow: 0 25px 55px rgba(0, 0, 0, 0.45);
+      outline: none;
     }
 
     .poster {
@@ -175,8 +199,11 @@
 
     .card h3 {
       margin: 0 0 7px;
+      overflow: hidden;
       font-size: 18px;
       line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .meta {
@@ -202,15 +229,23 @@
       border-radius: 20px;
     }
 
-    .retry {
-      display: inline-block;
-      margin-top: 16px;
-      padding: 10px 16px;
+    .retry,
+    .primary-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 44px;
+      padding: 10px 17px;
       color: white;
+      text-decoration: none;
       background: var(--purple);
       border: 0;
       border-radius: 999px;
       cursor: pointer;
+    }
+
+    .retry {
+      margin-top: 16px;
     }
 
     footer {
@@ -219,9 +254,232 @@
       text-align: center;
     }
 
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(14px);
+    }
+
+    .modal.open {
+      display: block;
+    }
+
+    .modal-shell {
+      position: relative;
+      width: min(1050px, calc(100% - 24px));
+      min-height: 300px;
+      margin: 24px auto;
+      overflow: hidden;
+      background: #101018;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 26px;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.75);
+    }
+
+    .close-button {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 5;
+      width: 44px;
+      height: 44px;
+      color: white;
+      font-size: 25px;
+      background: rgba(0, 0, 0, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .detail-loading {
+      padding: 90px 25px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .backdrop {
+      position: relative;
+      min-height: 390px;
+      display: flex;
+      align-items: flex-end;
+      padding: 45px;
+      background-position: center;
+      background-size: cover;
+    }
+
+    .backdrop::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      background:
+        linear-gradient(180deg, rgba(16, 16, 24, 0.1), #101018 96%),
+        linear-gradient(90deg, rgba(16, 16, 24, 0.9), rgba(16, 16, 24, 0.15));
+    }
+
+    .detail-hero {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+    }
+
+    .detail-hero h2 {
+      margin: 0 0 12px;
+      font-size: clamp(38px, 6vw, 70px);
+      line-height: 0.98;
+      letter-spacing: -2px;
+    }
+
+    .detail-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .detail-chip {
+      padding: 7px 11px;
+      color: #e4e4e7;
+      font-size: 13px;
+      background: rgba(0, 0, 0, 0.52);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+    }
+
+    .detail-content {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(250px, 0.55fr);
+      gap: 30px;
+      padding: 10px 45px 45px;
+    }
+
+    .detail-content h3 {
+      margin: 25px 0 12px;
+      font-size: 22px;
+    }
+
+    .overview {
+      margin: 0;
+      color: #d4d4d8;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .trailer-frame {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+      border-radius: 18px;
+      background: black;
+    }
+
+    .cast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+      gap: 13px;
+    }
+
+    .cast-card {
+      overflow: hidden;
+      background: var(--panel-light);
+      border-radius: 14px;
+    }
+
+    .cast-photo {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      display: block;
+      object-fit: cover;
+      background: #27272f;
+    }
+
+    .cast-info {
+      padding: 9px;
+    }
+
+    .cast-info strong,
+    .cast-info span {
+      display: block;
+    }
+
+    .cast-info strong {
+      font-size: 13px;
+    }
+
+    .cast-info span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .provider-section {
+      padding: 20px;
+      background: var(--panel);
+      border-radius: 20px;
+    }
+
+    .provider-section h3:first-child {
+      margin-top: 0;
+    }
+
+    .provider-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 11px;
+    }
+
+    .provider {
+      width: 52px;
+      height: 52px;
+      overflow: hidden;
+      background: #27272f;
+      border-radius: 13px;
+    }
+
+    .provider img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .provider-empty {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .provider-link {
+      width: 100%;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 760px) {
+      .backdrop {
+        min-height: 420px;
+        padding: 75px 22px 32px;
+      }
+
+      .detail-content {
+        grid-template-columns: 1fr;
+        padding: 5px 22px 35px;
+      }
+
+      .provider-section {
+        order: -1;
+      }
+    }
+
     @media (max-width: 600px) {
       .hero h1 {
         letter-spacing: -2px;
+      }
+
+      .status {
+        max-width: 110px;
+        text-align: right;
       }
 
       .grid {
@@ -230,7 +488,6 @@
       }
 
       .card {
-        min-height: 0;
         border-radius: 15px;
       }
 
@@ -246,6 +503,22 @@
         display: block;
         line-height: 1.5;
       }
+
+      .modal-shell {
+        width: 100%;
+        min-height: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+      }
+
+      .detail-hero h2 {
+        font-size: 42px;
+      }
+
+      .cast-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
     }
   </style>
 </head>
@@ -259,6 +532,7 @@
   <main>
     <section class="hero">
       <h1>Find your next obsession.</h1>
+
       <p>
         Real movies and television, updated from TMDB. Explore what is
         trending, newly released, coming soon, popular on TV, and top rated.
@@ -303,12 +577,34 @@
     Alpha uses TMDB data and images but is not endorsed or certified by TMDB.
   </footer>
 
+  <section
+    class="modal"
+    id="detailModal"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Title details"
+  >
+    <div class="modal-shell">
+      <button class="close-button" id="closeModal" aria-label="Close details">
+        ×
+      </button>
+
+      <div id="detailBody">
+        <div class="detail-loading">Loading details…</div>
+      </div>
+    </div>
+  </section>
+
   <script>
     const results = document.getElementById("results");
     const sectionTitle = document.getElementById("sectionTitle");
     const sectionSubtitle = document.getElementById("sectionSubtitle");
     const statusText = document.getElementById("status");
     const tabs = document.querySelectorAll(".tab");
+
+    const modal = document.getElementById("detailModal");
+    const detailBody = document.getElementById("detailBody");
+    const closeModalButton = document.getElementById("closeModal");
 
     const subtitles = {
       trending: "What people are watching today",
@@ -319,7 +615,7 @@
     };
 
     function escapeHTML(value = "") {
-      return value
+      return String(value)
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
@@ -328,7 +624,9 @@
     }
 
     function formatDate(dateString) {
-      if (!dateString) return "Date unavailable";
+      if (!dateString) {
+        return "Date unavailable";
+      }
 
       const date = new Date(`${dateString}T00:00:00`);
 
@@ -343,6 +641,23 @@
       });
     }
 
+    function formatRuntime(minutes) {
+      const total = Number(minutes);
+
+      if (!total) {
+        return "";
+      }
+
+      const hours = Math.floor(total / 60);
+      const remainingMinutes = total % 60;
+
+      if (!hours) {
+        return `${remainingMinutes}m`;
+      }
+
+      return `${hours}h ${remainingMinutes}m`;
+    }
+
     function renderCards(items) {
       if (!Array.isArray(items) || items.length === 0) {
         results.innerHTML =
@@ -354,22 +669,30 @@
         const title = escapeHTML(item.title || item.name || "Untitled");
         const date = item.release_date || item.first_air_date || "";
         const rating = Number(item.vote_average || 0).toFixed(1);
+        const type = item.media_type === "tv" ? "tv" : "movie";
 
         const poster = item.poster_path
           ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
           : "";
 
         const posterMarkup = poster
-          ? `<img
-               class="poster"
-               src="${poster}"
-               alt="${title} poster"
-               loading="lazy"
-             />`
+          ? `
+            <img
+              class="poster"
+              src="${poster}"
+              alt="${title} poster"
+              loading="lazy"
+            />
+          `
           : '<div class="poster"></div>';
 
         return `
-          <article class="card">
+          <button
+            class="card"
+            data-id="${item.id}"
+            data-type="${type}"
+            aria-label="Open details for ${title}"
+          >
             ${posterMarkup}
 
             <div class="card-content">
@@ -380,7 +703,7 @@
                 <span class="rating">★ ${rating}</span>
               </div>
             </div>
-          </article>
+          </button>
         `;
       }).join("");
     }
@@ -406,7 +729,6 @@
         statusText.textContent = "Live TMDB data";
       } catch (error) {
         console.error(error);
-
         statusText.textContent = "Connection error";
 
         results.innerHTML = `
@@ -415,11 +737,226 @@
             <br />
             ${escapeHTML(error.message)}
             <br />
-            <button class="retry" onclick="loadCategory('${category}', '${title}')">
-              Try again
-            </button>
+            <button class="retry" id="retryButton">Try again</button>
           </div>
         `;
+
+        document
+          .getElementById("retryButton")
+          ?.addEventListener("click", () => loadCategory(category, title));
+      }
+    }
+
+    function renderProviders(providers) {
+      const groups = [
+        ["Streaming", providers.streaming],
+        ["Free", providers.free],
+        ["With Ads", providers.ads],
+        ["Rent", providers.rent],
+        ["Buy", providers.buy]
+      ];
+
+      const availableGroups = groups.filter(
+        ([, items]) => Array.isArray(items) && items.length
+      );
+
+      if (!availableGroups.length) {
+        return `
+          <p class="provider-empty">
+            No U.S. streaming provider was listed by TMDB for this title.
+          </p>
+        `;
+      }
+
+      return availableGroups.map(([label, items]) => `
+        <h3>${label}</h3>
+
+        <div class="provider-list">
+          ${items.map((provider) => `
+            <div
+              class="provider"
+              title="${escapeHTML(provider.provider_name)}"
+            >
+              <img
+                src="https://image.tmdb.org/t/p/w185${provider.logo_path}"
+                alt="${escapeHTML(provider.provider_name)}"
+                loading="lazy"
+              />
+            </div>
+          `).join("")}
+        </div>
+      `).join("");
+    }
+
+    function renderCast(cast) {
+      if (!Array.isArray(cast) || !cast.length) {
+        return '<p class="provider-empty">Cast information is unavailable.</p>';
+      }
+
+      return `
+        <div class="cast-grid">
+          ${cast.map((person) => {
+            const image = person.profile_path
+              ? `https://image.tmdb.org/t/p/w185${person.profile_path}`
+              : "";
+
+            return `
+              <article class="cast-card">
+                ${
+                  image
+                    ? `
+                      <img
+                        class="cast-photo"
+                        src="${image}"
+                        alt="${escapeHTML(person.name)}"
+                        loading="lazy"
+                      />
+                    `
+                    : '<div class="cast-photo"></div>'
+                }
+
+                <div class="cast-info">
+                  <strong>${escapeHTML(person.name)}</strong>
+                  <span>${escapeHTML(person.character || "")}</span>
+                </div>
+              </article>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    async function openDetails(id, type) {
+      modal.classList.add("open");
+      document.body.classList.add("modal-open");
+
+      detailBody.innerHTML =
+        '<div class="detail-loading">Loading title details…</div>';
+
+      try {
+        const response = await fetch(
+          `/api/tmdb?id=${encodeURIComponent(id)}&type=${encodeURIComponent(type)}`
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Unable to load title details.");
+        }
+
+        const backdrop = data.backdrop_path
+          ? `https://image.tmdb.org/t/p/original${data.backdrop_path}`
+          : "";
+
+        const runtime = formatRuntime(data.runtime);
+        const genres = Array.isArray(data.genres)
+          ? data.genres.join(" • ")
+          : "";
+
+        const trailerMarkup = data.trailer_key
+          ? `
+            <h3>Trailer</h3>
+
+            <iframe
+              class="trailer-frame"
+              src="https://www.youtube.com/embed/${encodeURIComponent(data.trailer_key)}"
+              title="${escapeHTML(data.title)} trailer"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          `
+          : "";
+
+        const watchLink = data.providers?.link
+          ? `
+            <a
+              class="primary-button provider-link"
+              href="${escapeHTML(data.providers.link)}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View watch options
+            </a>
+          `
+          : "";
+
+        detailBody.innerHTML = `
+          <section
+            class="backdrop"
+            ${
+              backdrop
+                ? `style="background-image: url('${backdrop}')"`
+                : ""
+            }
+          >
+            <div class="detail-hero">
+              <h2>${escapeHTML(data.title)}</h2>
+
+              <div class="detail-meta">
+                <span class="detail-chip">
+                  ${formatDate(data.release_date)}
+                </span>
+
+                <span class="detail-chip">
+                  ★ ${Number(data.vote_average || 0).toFixed(1)}
+                </span>
+
+                ${
+                  runtime
+                    ? `<span class="detail-chip">${runtime}</span>`
+                    : ""
+                }
+
+                ${
+                  genres
+                    ? `<span class="detail-chip">${escapeHTML(genres)}</span>`
+                    : ""
+                }
+              </div>
+            </div>
+          </section>
+
+          <section class="detail-content">
+            <div>
+              <h3>Synopsis</h3>
+              <p class="overview">${escapeHTML(data.overview)}</p>
+
+              ${trailerMarkup}
+
+              <h3>Cast</h3>
+              ${renderCast(data.cast)}
+            </div>
+
+            <aside class="provider-section">
+              <h3>Where to Watch</h3>
+              ${renderProviders(data.providers || {})}
+              ${watchLink}
+            </aside>
+          </section>
+        `;
+
+        modal.scrollTop = 0;
+      } catch (error) {
+        console.error(error);
+
+        detailBody.innerHTML = `
+          <div class="detail-loading">
+            Alpha could not load these details.
+            <br /><br />
+            ${escapeHTML(error.message)}
+          </div>
+        `;
+      }
+    }
+
+    function closeDetails() {
+      modal.classList.remove("open");
+      document.body.classList.remove("modal-open");
+
+      const iframe = detailBody.querySelector("iframe");
+
+      if (iframe) {
+        iframe.src = "";
       }
     }
 
@@ -430,6 +967,30 @@
 
         loadCategory(tab.dataset.category, tab.dataset.title);
       });
+    });
+
+    results.addEventListener("click", (event) => {
+      const card = event.target.closest(".card");
+
+      if (!card) {
+        return;
+      }
+
+      openDetails(card.dataset.id, card.dataset.type);
+    });
+
+    closeModalButton.addEventListener("click", closeDetails);
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        closeDetails();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("open")) {
+        closeDetails();
+      }
     });
 
     loadCategory("trending", "Trending Now");
