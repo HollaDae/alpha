@@ -519,7 +519,52 @@
       .cast-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
-    }
+   .search-wrap {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 700px;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: rgba(255,255,255,0.55);
+}
+
+.search-input:focus {
+  border-color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.12);
+}
+
+.search-button {
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .search-wrap {
+    flex-direction: column;
+  }
+
+  .search-button {
+    width: 100%;
+  }
+} }
   </style>
 </head>
 
@@ -537,6 +582,19 @@
         Real movies and television, updated from TMDB. Explore what is
         trending, newly released, coming soon, popular on TV, and top rated.
       </p>
+
+      <div class="search-wrap">
+  <input
+    type="search"
+    id="searchInput"
+    class="search-input"
+    placeholder="Search movies & TV shows..."
+    autocomplete="off"
+  />
+  <button id="searchButton" class="search-button" type="button">
+    Search
+  </button>
+</div>
     </section>
 
     <nav class="tabs" aria-label="Entertainment categories">
