@@ -555,7 +555,7 @@
   font-weight: 700;
   cursor: pointer;
 }
-
+}
 @media (max-width: 600px) {
   .search-wrap {
     flex-direction: column;
@@ -564,7 +564,7 @@
   .search-button {
     width: 100%;
   }
-} }
+ }
   </style>
 </head>
 
@@ -1050,7 +1050,48 @@
         closeDetails();
       }
     });
+// SEARCH BUTTON + ENTER KEY
+const searchInputEl = document.getElementById("searchInput");
+const searchButtonEl = document.getElementById("searchButton");
 
+async function runSearch() {
+  const query = searchInputEl.value.trim();
+
+  if (!query) return;
+
+  statusText.textContent = `Searching for "${query}"...`;
+
+  try {
+    const response = await fetch(
+      `/api/tmdb?search=${encodeURIComponent(query)}`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Search failed.");
+    }
+
+    renderCards(data.results || []);
+
+    statusText.textContent =
+      data.results && data.results.length
+        ? `Search results for "${query}"`
+        : `No results found for "${query}"`;
+
+  } catch (error) {
+    console.error(error);
+    statusText.textContent = "Search error";
+  }
+}
+
+searchButtonEl.addEventListener("click", runSearch);
+
+searchInputEl.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    runSearch();
+  }
+});
     loadCategory("trending", "Trending Now");
   </script>
 </body>

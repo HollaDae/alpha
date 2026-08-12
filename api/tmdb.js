@@ -233,9 +233,65 @@ export default async function handler(request, response) {
   };
 
   try {
+
+    // SEARCH MOVIES + TV
+const searchQuery = String(request.query.search || "").trim();
+
+if (searchQuery) {
+  const encodedSearch = encodeURIComponent(searchQuery);
+
+  const [movieData, tvData] = await Promise.all([
+    requestTMDB(
+      `https://api.themoviedb.org/3/search/movie?query=${encodedSearch}&include_adult=false&language=en-US&page=1`,
+      headers
+    ),
+    requestTMDB(
+      `https://api.themoviedb.org/3/search/tv?query=${encodedSearch}&include_adult=false&language=en-US&page=1`,
+      headers
+    )
+  ]);
+
+  const searchResults = [
+    ...normalizeResults(movieData.results || [], "movie"),
+    ...normalizeResults(tvData.results || [], "tv")
+  ]
+    .sort((a, b) => Number(b.popularity || 0) - Number(a.popularity || 0))
+    .slice(0, 20);
+
+  return response.status(200).json({
+    results: searchResults
+  });
+}
     /*
       DETAIL REQUEST
+// SEARCH MOVIES + TV
+const searchQuery = String(request.query.search || "").trim();
 
+if (searchQuery) {
+  const encodedSearch = encodeURIComponent(searchQuery);
+
+  const [movieData, tvData] = await Promise.all([
+    requestTMDB(
+      `https://api.themoviedb.org/3/search/movie?query=${encodedSearch}&include_adult=false&language=en-US&page=1`,
+      headers
+    ),
+    requestTMDB(
+      `https://api.themoviedb.org/3/search/tv?query=${encodedSearch}&include_adult=false&language=en-US&page=1`,
+      headers
+    )
+  ]);
+
+  const searchResults = [
+    ...normalizeResults(movieData.results || [], "movie"),
+    ...normalizeResults(tvData.results || [], "tv")
+  ]
+    .sort((a, b) => Number(b.popularity || 0) - Number(a.popularity || 0))
+    .slice(0, 20);
+
+  return response.status(200).json({
+    results: searchResults
+  });
+}
       /api/tmdb?id=123&type=movie
     */
     if (request.query.id) {
