@@ -633,7 +633,166 @@
   </button>
 </div>
     </section>
+<style>
+  .alpha-explore {
+    margin: 28px 0 34px;
+  }
 
+  .alpha-explore__heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .alpha-explore__grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .alpha-explore__card {
+    min-height: 112px;
+    padding: 16px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.045);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .alpha-explore__card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(124, 58, 237, 0.55);
+    background: rgba(124, 58, 237, 0.10);
+  }
+
+  .alpha-explore__icon {
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  .alpha-explore__label {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .alpha-explore__sub {
+    color: rgba(255, 255, 255, 0.56);
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  .alpha-explore__portal {
+    position: relative;
+    overflow: hidden;
+    border-color: rgba(124, 58, 237, 0.58);
+    background:
+      radial-gradient(circle at center, rgba(255, 255, 255, 0.10) 0 14%, transparent 15% 100%),
+      linear-gradient(145deg, rgba(56, 189, 248, 0.10), rgba(124, 58, 237, 0.16));
+    box-shadow: inset 0 0 24px rgba(124, 58, 237, 0.10);
+  }
+
+  .alpha-explore__portal-ring {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 4px solid rgba(191, 219, 254, 0.95);
+    box-shadow:
+      0 0 10px rgba(125, 211, 252, 0.95),
+      0 0 20px rgba(124, 58, 237, 0.70),
+      inset 0 0 12px rgba(255, 255, 255, 0.45);
+  }
+
+  @media (max-width: 900px) {
+    .alpha-explore__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .alpha-explore {
+      margin: 22px 0 28px;
+    }
+
+    .alpha-explore__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .alpha-explore__card {
+      min-height: 104px;
+      padding: 14px 8px;
+      border-radius: 18px;
+    }
+
+    .alpha-explore__icon {
+      font-size: 26px;
+    }
+
+    .alpha-explore__label {
+      font-size: 13px;
+    }
+  }
+</style>
+
+<section class="alpha-explore" aria-labelledby="alphaExploreHeading">
+  <div class="alpha-explore__heading" id="alphaExploreHeading">
+    <span aria-hidden="true">✦</span>
+    <span>Explore</span>
+  </div>
+
+  <div class="alpha-explore__grid">
+    <button class="alpha-explore__card" type="button" data-explore="genres">
+      <span class="alpha-explore__icon" aria-hidden="true">🎞️</span>
+      <span class="alpha-explore__label">Genres</span>
+      <span class="alpha-explore__sub">Action, horror, sci-fi & more</span>
+    </button>
+
+    <button class="alpha-explore__card" type="button" data-explore="formats">
+      <span class="alpha-explore__icon" aria-hidden="true">📺</span>
+      <span class="alpha-explore__label">Formats</span>
+      <span class="alpha-explore__sub">Movies, TV, docs & specials</span>
+    </button>
+
+    <button class="alpha-explore__card" type="button" data-explore="collections">
+      <span class="alpha-explore__icon" aria-hidden="true">🔥</span>
+      <span class="alpha-explore__label">Collections</span>
+      <span class="alpha-explore__sub">Top 10, new & coming soon</span>
+    </button>
+
+    <button class="alpha-explore__card" type="button" data-explore="for-you">
+      <span class="alpha-explore__icon" aria-hidden="true">👥</span>
+      <span class="alpha-explore__label">For You</span>
+      <span class="alpha-explore__sub">Kids, family, anime & more</span>
+    </button>
+
+    <button class="alpha-explore__card" type="button" data-explore="moods">
+      <span class="alpha-explore__icon" aria-hidden="true">⭐</span>
+      <span class="alpha-explore__label">Moods & More</span>
+      <span class="alpha-explore__sub">Dark, uplifting, quirky & more</span>
+    </button>
+
+    <button class="alpha-explore__card alpha-explore__portal" type="button" data-explore="portal">
+      <span class="alpha-explore__portal-ring" aria-hidden="true"></span>
+      <span class="alpha-explore__label">The Portal</span>
+      <span class="alpha-explore__sub">Step back into your era</span>
+    </button>
+  </div>
+</section>
     <nav class="tabs" aria-label="Entertainment categories">
       <button class="tab active" data-category="trending" data-title="Trending Now">
         Trending
