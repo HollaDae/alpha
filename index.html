@@ -863,6 +863,669 @@
     </button>
   </div>
 </section>
+
+<!-- =========================================================
+     ALPHA — LIVE TV / WHAT'S ON NOW
+     VERSION 1: VISUAL PROTOTYPE WITH MOCK TV DATA
+     ========================================================= -->
+
+<section id="alpha-live-tv">
+
+  <style>
+    /* =========================
+       LIVE TV SECTION
+       ========================= */
+
+    #alpha-live-tv {
+      box-sizing: border-box;
+      font-family: inherit;
+      margin: 26px auto;
+      width: min(94%, 1180px);
+    }
+
+    #alpha-live-tv *,
+    #alpha-live-tv *::before,
+    #alpha-live-tv *::after {
+      box-sizing: border-box;
+    }
+
+    .alpha-tv-shell {
+      background:
+        linear-gradient(
+          145deg,
+          rgba(28, 32, 46, 0.96),
+          rgba(13, 16, 26, 0.98)
+        );
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow:
+        0 18px 50px rgba(0, 0, 0, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      color: white;
+      overflow: hidden;
+    }
+
+    .alpha-tv-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .alpha-tv-title-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .alpha-tv-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      font-size: 25px;
+      background: rgba(119, 92, 255, 0.18);
+      border: 1px solid rgba(150, 128, 255, 0.25);
+    }
+
+    .alpha-tv-title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .alpha-tv-subtitle {
+      margin: 5px 0 0;
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 13px;
+    }
+
+    .alpha-live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: rgba(255, 68, 88, 0.13);
+      border: 1px solid rgba(255, 68, 88, 0.28);
+    }
+
+    .alpha-live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff4058;
+      box-shadow: 0 0 10px #ff4058;
+    }
+
+    /* =========================
+       SOURCE SELECTOR
+       ========================= */
+
+    .alpha-tv-source-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.45);
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 7px;
+    }
+
+    .alpha-tv-select-wrap {
+      position: relative;
+    }
+
+    .alpha-tv-source {
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      outline: none;
+      border-radius: 16px;
+      padding: 13px 42px 13px 15px;
+      margin-bottom: 19px;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.08),
+          rgba(255, 255, 255, 0.035)
+        );
+      cursor: pointer;
+    }
+
+    .alpha-tv-select-wrap::after {
+      content: "▼";
+      position: absolute;
+      right: 16px;
+      top: 14px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.6);
+      pointer-events: none;
+    }
+
+    /* =========================
+       WHAT'S ON NOW
+       ========================= */
+
+    .alpha-tv-now-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 2px 0 10px;
+    }
+
+    .alpha-tv-now-heading strong {
+      font-size: 14px;
+    }
+
+    .alpha-tv-location {
+      color: rgba(255,255,255,0.42);
+      font-size: 11px;
+    }
+
+    .alpha-channel-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .alpha-channel {
+      position: relative;
+      display: grid;
+      grid-template-columns: 55px 1fr auto;
+      align-items: center;
+      gap: 11px;
+      min-height: 72px;
+      padding: 11px 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.065);
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .alpha-channel:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.075);
+      border-color: rgba(255,255,255,0.13);
+    }
+
+    .alpha-channel-number {
+      display: grid;
+      place-items: center;
+      height: 44px;
+      min-width: 50px;
+      padding: 0 6px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.07);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .alpha-channel-name {
+      margin: 0 0 4px;
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .alpha-program-name {
+      margin: 0;
+      color: rgba(255,255,255,0.72);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .alpha-channel-time {
+      color: rgba(255,255,255,0.43);
+      font-size: 10px;
+      text-align: right;
+    }
+
+    .alpha-progress {
+      position: absolute;
+      height: 3px;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(
+        90deg,
+        #7a5cff,
+        #bb63ff
+      );
+      border-radius: 0 999px 999px 0;
+    }
+
+    .alpha-favorite {
+      color: #ffd65a;
+      margin-left: 5px;
+    }
+
+    /* =========================
+       GUIDE BUTTON
+       ========================= */
+
+    .alpha-tv-guide-button {
+      width: 100%;
+      margin-top: 16px;
+      padding: 14px 18px;
+      border: 0;
+      border-radius: 17px;
+      color: white;
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(111, 80, 255, 0.95),
+          rgba(167, 78, 255, 0.95)
+        );
+      box-shadow: 0 8px 25px rgba(105, 74, 255, 0.22);
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+    }
+
+    .alpha-tv-guide-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 11px 32px rgba(105, 74, 255, 0.32);
+    }
+
+    .alpha-tv-note {
+      text-align: center;
+      margin: 11px 0 0;
+      color: rgba(255,255,255,0.33);
+      font-size: 10px;
+    }
+
+    /* =========================
+       DESKTOP SIDEBAR MODE
+       ========================= */
+
+    @media (min-width: 1250px) {
+
+      #alpha-live-tv {
+        position: fixed;
+        left: 18px;
+        top: 115px;
+        width: 275px;
+        max-height: calc(100vh - 135px);
+        margin: 0;
+        z-index: 50;
+      }
+
+      .alpha-tv-shell {
+        max-height: calc(100vh - 135px);
+        overflow-y: auto;
+        scrollbar-width: thin;
+      }
+
+      .alpha-tv-title {
+        font-size: 19px;
+      }
+
+      .alpha-tv-icon {
+        width: 43px;
+        height: 43px;
+        font-size: 22px;
+      }
+
+      .alpha-channel {
+        grid-template-columns: 48px 1fr;
+      }
+
+      .alpha-channel-time {
+        display: none;
+      }
+    }
+
+    /* =========================
+       MOBILE
+       ========================= */
+
+    @media (max-width: 640px) {
+
+      #alpha-live-tv {
+        width: calc(100% - 24px);
+        margin: 18px 12px;
+      }
+
+      .alpha-tv-shell {
+        border-radius: 24px;
+        padding: 16px;
+      }
+
+      .alpha-channel {
+        grid-template-columns: 50px 1fr;
+      }
+
+      .alpha-channel-time {
+        display: none;
+      }
+
+      .alpha-tv-subtitle {
+        font-size: 12px;
+      }
+
+      .alpha-live-badge {
+        padding: 7px 9px;
+        font-size: 10px;
+      }
+    }
+
+  </style>
+
+
+  <div class="alpha-tv-shell">
+
+    <!-- HEADER -->
+
+    <div class="alpha-tv-top">
+
+      <div class="alpha-tv-title-area">
+
+        <div class="alpha-tv-icon">
+          📺
+        </div>
+
+        <div>
+          <h2 class="alpha-tv-title">Live TV</h2>
+
+          <p class="alpha-tv-subtitle">
+            What's on right now
+          </p>
+        </div>
+
+      </div>
+
+      <div class="alpha-live-badge">
+        <span class="alpha-live-dot"></span>
+        LIVE
+      </div>
+
+    </div>
+
+
+    <!-- TV SOURCE -->
+
+    <div class="alpha-tv-source-label">
+      WATCHING
+    </div>
+
+    <div class="alpha-tv-select-wrap">
+
+      <select
+        class="alpha-tv-source"
+        aria-label="Choose TV source"
+      >
+
+        <option>📡 Antenna / Local TV</option>
+
+        <option>📺 Samsung TV Plus</option>
+
+        <option>📺 LG Channels</option>
+
+        <option>📺 Roku</option>
+
+        <option>📺 Pluto TV</option>
+
+        <option>📺 YouTube TV</option>
+
+        <option>📺 Hulu + Live TV</option>
+
+        <option>⭐ My Favorites</option>
+
+      </select>
+
+    </div>
+
+
+    <!-- WHAT'S ON NOW -->
+
+    <div class="alpha-tv-now-heading">
+
+      <strong>
+        What's On Now
+      </strong>
+
+      <span class="alpha-tv-location">
+        📍 Local
+      </span>
+
+    </div>
+
+
+    <div class="alpha-channel-list">
+
+
+      <!-- FOX -->
+
+      <div class="alpha-channel">
+
+        <div class="alpha-channel-number">
+          4.1
+        </div>
+
+        <div>
+
+          <p class="alpha-channel-name">
+            FOX 4
+            <span class="alpha-favorite">★</span>
+          </p>
+
+          <p class="alpha-program-name">
+            FOX 4 News
+          </p>
+
+        </div>
+
+        <div class="alpha-channel-time">
+          Now
+        </div>
+
+        <div
+          class="alpha-progress"
+          style="width:68%;">
+        </div>
+
+      </div>
+
+
+      <!-- NBC -->
+
+      <div class="alpha-channel">
+
+        <div class="alpha-channel-number">
+          5.1
+        </div>
+
+        <div>
+
+          <p class="alpha-channel-name">
+            NBC 5
+          </p>
+
+          <p class="alpha-program-name">
+            NBC 5 News
+          </p>
+
+        </div>
+
+        <div class="alpha-channel-time">
+          Now
+        </div>
+
+        <div
+          class="alpha-progress"
+          style="width:46%;">
+        </div>
+
+      </div>
+
+
+      <!-- ABC -->
+
+      <div class="alpha-channel">
+
+        <div class="alpha-channel-number">
+          8.1
+        </div>
+
+        <div>
+
+          <p class="alpha-channel-name">
+            ABC 8
+            <span class="alpha-favorite">★</span>
+          </p>
+
+          <p class="alpha-program-name">
+            World News Tonight
+          </p>
+
+        </div>
+
+        <div class="alpha-channel-time">
+          Now
+        </div>
+
+        <div
+          class="alpha-progress"
+          style="width:79%;">
+        </div>
+
+      </div>
+
+
+      <!-- CBS -->
+
+      <div class="alpha-channel">
+
+        <div class="alpha-channel-number">
+          11.1
+        </div>
+
+        <div>
+
+          <p class="alpha-channel-name">
+            CBS 11
+          </p>
+
+          <p class="alpha-program-name">
+            CBS Evening News
+          </p>
+
+        </div>
+
+        <div class="alpha-channel-time">
+          Now
+        </div>
+
+        <div
+          class="alpha-progress"
+          style="width:35%;">
+        </div>
+
+      </div>
+
+
+      <!-- PBS -->
+
+      <div class="alpha-channel">
+
+        <div class="alpha-channel-number">
+          13.1
+        </div>
+
+        <div>
+
+          <p class="alpha-channel-name">
+            PBS
+          </p>
+
+          <p class="alpha-program-name">
+            PBS NewsHour
+          </p>
+
+        </div>
+
+        <div class="alpha-channel-time">
+          Now
+        </div>
+
+        <div
+          class="alpha-progress"
+          style="width:55%;">
+        </div>
+
+      </div>
+
+
+      <!-- CW -->
+
+      <div class="alpha-channel">
+
+        <div class="alpha-channel-number">
+          33.1
+        </div>
+
+        <div>
+
+          <p class="alpha-channel-name">
+            CW 33
+          </p>
+
+          <p class="alpha-program-name">
+            Local Programming
+          </p>
+
+        </div>
+
+        <div class="alpha-channel-time">
+          Now
+        </div>
+
+        <div
+          class="alpha-progress"
+          style="width:24%;">
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- FULL GUIDE BUTTON -->
+
+    <button
+      class="alpha-tv-guide-button"
+      type="button"
+    >
+      View Full TV Guide →
+    </button>
+
+    <p class="alpha-tv-note">
+      Prototype listings • Live data coming later
+    </p>
+
+  </div>
+
+</section>
+
+<!-- END ALPHA LIVE TV -->
 <!-- CHUNK 2: GENRES OPEN/CLOSE MENU -->
 
 <style>
