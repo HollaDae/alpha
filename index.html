@@ -564,7 +564,7 @@
   max-width: 700px;
 }
 
-..search-input {
+.search-input {
   flex: 1;
   min-width: 0;
   padding: 14px 18px;
@@ -602,6 +602,76 @@
     width: 100%;
   }
  }
+/* ===== EXPLORE CATEGORY CARDS ===== */
+
+.explore-section {
+  margin-top: 32px;
+}
+
+.explore-title {
+  margin-bottom: 16px;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.explore-card {
+  min-height: 110px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.explore-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.explore-card-icon {
+  margin-bottom: 12px;
+  font-size: 1.8rem;
+}
+
+.explore-card-title {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.explore-card-subtitle {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  opacity: 0.65;
+}
+
+@media (max-width: 800px) {
+  .explore-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .explore-grid {
+    grid-template-columns: 1fr;
+  }
+}
   </style>
 </head>
 
@@ -793,6 +863,152 @@
     </button>
   </div>
 </section>
+<!-- CHUNK 2: GENRES OPEN/CLOSE MENU -->
+
+<style>
+  .alpha-explore-menu {
+    margin: 0 0 24px;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.045);
+  }
+
+  .alpha-explore-menu[hidden] {
+    display: none;
+  }
+
+  .alpha-explore-menu__title {
+    margin: 0 0 12px;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .alpha-explore-menu__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .alpha-genre-btn {
+    padding: 11px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .alpha-genre-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(124, 58, 237, 0.65);
+    background: rgba(124, 58, 237, 0.16);
+  }
+
+  @media (max-width: 600px) {
+    .alpha-explore-menu {
+      padding: 14px;
+      border-radius: 18px;
+    }
+
+    .alpha-explore-menu__grid {
+      gap: 8px;
+    }
+
+    .alpha-genre-btn {
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+  }
+</style>
+
+<section
+  id="genresMenu"
+  class="alpha-explore-menu"
+  aria-labelledby="genresMenuTitle"
+  hidden
+>
+  <h2 id="genresMenuTitle" class="alpha-explore-menu__title">
+    Browse by Genre
+  </h2>
+
+  <div class="alpha-explore-menu__grid">
+    <button class="alpha-genre-btn" type="button" data-genre="action">
+      Action
+    </button>
+
+    <button class="alpha-genre-btn" type="button" data-genre="comedy">
+      Comedy
+    </button>
+
+    <button class="alpha-genre-btn" type="button" data-genre="drama">
+      Drama
+    </button>
+
+    <button class="alpha-genre-btn" type="button" data-genre="horror">
+      Horror
+    </button>
+
+    <button class="alpha-genre-btn" type="button" data-genre="romance">
+      Romance
+    </button>
+
+    <button class="alpha-genre-btn" type="button" data-genre="thriller">
+      Thriller
+    </button>
+
+    <button class="alpha-genre-btn" type="button" data-genre="sci-fi">
+      Sci-Fi
+    </button>
+
+    <button class="alpha-genre-btn" type="button" data-genre="fantasy">
+      Fantasy
+    </button>
+
+    <button class="alpha-genre-btn" type="button" data-genre="rom-com">
+      Rom-Com
+    </button>
+  </div>
+</section>
+
+<script>
+  const genresCard = document.querySelector('[data-explore="genres"]');
+  const genresMenu = document.getElementById('genresMenu');
+  const exploreCards = document.querySelectorAll('.alpha-explore__card');
+
+  if (genresCard && genresMenu) {
+    genresCard.setAttribute('aria-expanded', 'false');
+
+    genresCard.addEventListener('click', () => {
+      const isOpen = !genresMenu.hidden;
+
+      genresMenu.hidden = isOpen;
+      genresCard.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    exploreCards.forEach((card) => {
+      if (card !== genresCard) {
+        card.addEventListener('click', () => {
+          genresMenu.hidden = true;
+          genresCard.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  }
+</script>
+
+<!--   -->
     <nav class="tabs" aria-label="Entertainment categories">
       <button class="tab active" data-category="trending" data-title="Trending Now">
         Trending

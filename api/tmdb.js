@@ -433,7 +433,53 @@ if (searchQuery) {
         ).slice(0, 20)
       });
     }
+// ===== CHUNK 3A: GENRE FILTER API =====
 
+if (category === "genre") {
+  const genreKey = String(request.query.genre || "")
+    .trim()
+    .toLowerCase();
+
+  const genreMap = {
+    action: 28,
+    comedy: 35,
+    drama: 18,
+    horror: 27,
+    romance: 10749,
+    thriller: 53,
+    "sci-fi": 878,
+    fantasy: 14,
+    "rom-com": 10749
+  };
+
+  const genreId = genreMap[genreKey];
+
+  if (!genreId) {
+    return response.status(400).json({
+      error: "Unknown genre",
+      genre: genreKey
+    });
+  }
+
+  const url =
+    `https://api.themoviedb.org/3/discover/movie` +
+    `?with_genres=${genreId}` +
+    `&include_adult=false` +
+    `&language=en-US` +
+    `&page=1` +
+    `&sort_by=popularity.desc`;
+
+  const data = await requestTMDB(url, headers);
+
+  return response.status(200).json({
+    results: normalizeResults(
+      data.results || [],
+      "movie"
+    ).slice(0, 20)
+  });
+}
+
+// ===== END CHUNK 3A =====
     /*
       TRENDING WITHOUT FILTERS
     */
