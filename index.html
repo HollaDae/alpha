@@ -997,14 +997,38 @@
       genresCard.setAttribute('aria-expanded', String(!isOpen));
     });
 
-    exploreCards.forEach((card) => {
-      if (card !== genresCard) {
-        card.addEventListener('click', () => {
-          genresMenu.hidden = true;
-          genresCard.setAttribute('aria-expanded', 'false');
-        });
-      }
-    });
+ exploreCards.forEach((card) => {
+  if (card === genresCard) return;
+
+  card.addEventListener("click", () => {
+    genresMenu.hidden = true;
+    genresCard.setAttribute("aria-expanded", "false");
+
+    const exploreType = card.dataset.explore;
+
+    if (exploreType === "formats") {
+      searchInputEl.value = "movie";
+      runSearch();
+    }
+
+    if (exploreType === "collections") {
+      loadCategory("popular", "Popular Collections");
+    }
+
+    if (exploreType === "for-you") {
+      loadCategory("top_rated", "For You");
+    }
+
+    if (exploreType === "moods") {
+      searchInputEl.value = "comedy";
+      runSearch();
+    }
+
+    if (exploreType === "portal") {
+      loadCategory("trending", "The Portal");
+    }
+  });
+});
   }
 </script>
 
