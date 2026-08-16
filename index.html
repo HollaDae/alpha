@@ -1032,10 +1032,12 @@
       font-size: 11px;
     }
 
-    .alpha-channel-list {
-      display: grid;
-      gap: 9px;
-    }
+  .alpha-channel-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  gap: 9px;
+}
 
     .alpha-channel {
       position: relative;
@@ -1054,7 +1056,10 @@
         border-color 0.18s ease;
       cursor: pointer;
       overflow: hidden;
-    }
+    }.alpha-channel-details {
+  grid-column: 1 / -1;
+  width: 100%;
+}
 
     .alpha-channel:hover {
       transform: translateY(-2px);
@@ -1526,6 +1531,673 @@
 </section>
 
 <!-- END ALPHA LIVE TV -->
+
+<!-- =========================================================
+     ALPHA — FULL TV GUIDE MODAL
+     SELF-CONTAINED BLOCK
+     ========================================================= -->
+
+<style>
+  #alpha-full-guide-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  #alpha-full-guide-overlay.alpha-guide-open {
+    display: flex;
+  }
+
+  .alpha-full-guide {
+    width: min(1100px, 96vw);
+    max-height: 88vh;
+    overflow: hidden;
+    border-radius: 26px;
+    background:
+      linear-gradient(
+        145deg,
+        rgba(28, 32, 46, 0.99),
+        rgba(12, 15, 24, 0.99)
+      );
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+    color: white;
+  }
+
+  .alpha-guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .alpha-guide-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .alpha-guide-title h2 {
+    margin: 0;
+    font-size: 22px;
+  }
+
+  .alpha-guide-title span {
+    color: rgba(255,255,255,0.50);
+    font-size: 12px;
+  }
+
+  .alpha-guide-close {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  .alpha-guide-controls {
+    display: flex;
+    gap: 10px;
+    padding: 14px 20px;
+    overflow-x: auto;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .alpha-guide-chip {
+    white-space: nowrap;
+    padding: 9px 13px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: white;
+    font-size: 12px;
+  }
+
+  .alpha-guide-body {
+    overflow: auto;
+    max-height: calc(88vh - 140px);
+  }
+
+  .alpha-guide-grid {
+    min-width: 900px;
+  }
+
+  .alpha-guide-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 1fr 1fr 1fr;
+    min-height: 64px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .alpha-guide-row.alpha-guide-times {
+    min-height: 44px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: rgba(17,20,31,0.98);
+  }
+
+  .alpha-guide-cell {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    font-size: 12px;
+  }
+
+  .alpha-guide-channel {
+    font-weight: 800;
+    background: rgba(255,255,255,0.035);
+  }
+
+  .alpha-guide-program {
+    margin: 5px;
+    border-radius: 13px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 10px 12px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .alpha-guide-program strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .alpha-guide-program small {
+    color: rgba(255,255,255,0.48);
+  }
+
+  @media (max-width: 640px) {
+    #alpha-full-guide-overlay {
+      padding: 10px;
+    }
+
+    .alpha-full-guide {
+      width: 100%;
+      max-height: 92vh;
+      border-radius: 22px;
+    }
+
+    .alpha-guide-body {
+      max-height: calc(92vh - 140px);
+    }
+  }
+</style>
+
+
+<div
+  id="alpha-full-guide-overlay"
+  aria-hidden="true"
+>
+
+  <div
+    class="alpha-full-guide"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Full TV Guide"
+  >
+
+    <div class="alpha-guide-header">
+
+      <div class="alpha-guide-title">
+        <div>📺</div>
+
+        <div>
+          <h2>TV Guide</h2>
+          <span>Local TV • Prototype</span>
+        </div>
+      </div>
+
+      <button
+        class="alpha-guide-close"
+        id="alpha-guide-close"
+        type="button"
+        aria-label="Close TV Guide"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="alpha-guide-controls">
+
+      <div class="alpha-guide-chip">
+        📡 Antenna / Local
+      </div>
+
+      <div class="alpha-guide-chip">
+        ⭐ Favorites
+      </div>
+
+      <div class="alpha-guide-chip">
+        📍 Local TV
+      </div>
+
+    </div>
+
+
+    <div class="alpha-guide-body">
+
+      <div class="alpha-guide-grid">
+
+        <!-- TIMES -->
+
+        <div class="alpha-guide-row alpha-guide-times">
+
+          <div class="alpha-guide-cell alpha-guide-channel">
+            CHANNEL
+          </div>
+
+          <div class="alpha-guide-cell">
+            NOW
+          </div>
+
+          <div class="alpha-guide-cell">
+            6:00
+          </div>
+
+          <div class="alpha-guide-cell">
+            6:30
+          </div>
+
+          <div class="alpha-guide-cell">
+            7:00
+          </div>
+
+        </div>
+
+
+  <!-- FOX -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    4.1 FOX
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>FOX 4 News</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Local News</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>TMZ</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Prime Time</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+<!-- NBC -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    5.1 NBC
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>NBC 5 News</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>NBC News</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Access</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Prime Time</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+<!-- ABC -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    8.1 ABC
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>World News Tonight</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Local News</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Entertainment Tonight</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Wheel of Fortune</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+<!-- CBS -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    11.1 CBS
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>CBS Evening News</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Local News</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Inside Edition</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Prime Time</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+<!-- PBS -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    13.1 PBS
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>PBS NewsHour</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>NewsHour</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Documentary</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Nature</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+<!-- KTXA -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    21.1 KTXA
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Local Programming</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Sports & Entertainment</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Local Programming</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Prime Time</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+<!-- KDFI -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    27.1 KDFI
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Local Programming</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Entertainment</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Comedy</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Movie</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+<!-- CW -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    33.1 CW
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Local Programming</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>The Office</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Comedy</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Movie</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+<!-- TELEMUNDO -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    39.1 Telemundo
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Noticias</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Noticias Locales</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Entretenimiento</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Prime Time</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+<!-- UNIMAS -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    49.1 UniMás
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Programación Local</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Noticias</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Entretenimiento</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Prime Time</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+<!-- KAZD -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    55.1 KAZD
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Local Programming</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Entertainment</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Local Programming</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Movie</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+<!-- TBN -->
+<div class="alpha-guide-row">
+  <div class="alpha-guide-cell alpha-guide-channel">
+    58.1 TBN
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>TBN Programming</strong>
+    <small>Now</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Faith & Family</strong>
+    <small>6:00 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Special Program</strong>
+    <small>6:30 PM</small>
+  </div>
+
+  <div class="alpha-guide-program">
+    <strong>Prime Time</strong>
+    <small>7:00 PM</small>
+  </div>
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+  (() => {
+
+    const guideButton =
+      document.querySelector(".alpha-tv-guide-button");
+
+    const guideOverlay =
+      document.getElementById("alpha-full-guide-overlay");
+
+    const guideClose =
+      document.getElementById("alpha-guide-close");
+
+
+    if (!guideButton || !guideOverlay || !guideClose) {
+      return;
+    }
+
+
+    function openAlphaGuide() {
+
+      guideOverlay.classList.add("alpha-guide-open");
+
+      guideOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+      document.body.style.overflow = "hidden";
+    }
+
+
+    function closeAlphaGuide() {
+
+      guideOverlay.classList.remove("alpha-guide-open");
+
+      guideOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      document.body.style.overflow = "";
+    }
+
+
+    guideButton.addEventListener(
+      "click",
+      openAlphaGuide
+    );
+
+
+    guideClose.addEventListener(
+      "click",
+      closeAlphaGuide
+    );
+
+
+    guideOverlay.addEventListener(
+      "click",
+      (event) => {
+
+        if (event.target === guideOverlay) {
+          closeAlphaGuide();
+        }
+
+      }
+    );
+
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (event.key === "Escape") {
+          closeAlphaGuide();
+        }
+
+      }
+    );
+
+  })();
+</script>
+
+<!-- END ALPHA FULL TV GUIDE MODAL -->
 <!-- CHUNK 2: GENRES OPEN/CLOSE MENU -->
 
 <style>
@@ -2192,6 +2864,84 @@ searchInputEl.addEventListener("keydown", (event) => {
   }
 });
     loadCategory("trending", "Trending Now");
-  </script>
+  
+
+
+
+  document.addEventListener("click", function (event) {
+  const channel = event.target.closest(".alpha-channel");
+
+  if (!channel) return;
+
+  const alreadyOpen = channel.querySelector(".alpha-channel-details");
+
+  // Close any open channel detail boxes first
+  document.querySelectorAll(".alpha-channel-details").forEach((box) => {
+    box.remove();
+  });
+
+  // Clicking the same channel again closes it
+  if (alreadyOpen) return;
+
+  const channelNumber =
+    channel.querySelector(".alpha-channel-number")?.textContent.trim() || "";
+
+  const channelName =
+    channel.querySelector(".alpha-channel-name")?.textContent.trim() || "Channel";
+
+  const programName =
+    channel.querySelector(".alpha-program-name")?.textContent.trim() || "Program information unavailable";
+
+  const time =
+    channel.querySelector(".alpha-channel-time")?.textContent.trim() || "Now";
+
+  const details = document.createElement("div");
+  details.className = "alpha-channel-details";
+
+  details.style.cssText = `
+    width: 100%;
+    margin-top: 14px;
+    padding: 16px;
+    border-radius: 16px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.10);
+    box-sizing: border-box;
+  `;
+
+  details.innerHTML = `
+    <div style="font-size:12px;opacity:.65;margin-bottom:5px;">
+      CHANNEL ${channelNumber}
+    </div>
+
+    <div style="font-size:18px;font-weight:700;margin-bottom:12px;">
+      ${channelName}
+    </div>
+
+    <div style="font-size:12px;opacity:.6;margin-bottom:4px;">
+      ON NOW
+    </div>
+
+    <div style="font-weight:700;">
+      ${programName}
+    </div>
+
+    <div style="font-size:12px;opacity:.65;margin-top:3px;">
+      ${time}
+    </div>
+
+    <div style="
+      margin-top:14px;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.08);
+      font-size:12px;
+      opacity:.55;
+    ">
+      Full upcoming schedule will appear here when Alpha is connected to live TV listings data.
+    </div>
+  `;
+
+  channel.appendChild(details);
+});
+</script>
 </body>
 </html>
