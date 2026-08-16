@@ -2331,7 +2331,19 @@
       genresMenu.hidden = isOpen;
       genresCard.setAttribute('aria-expanded', String(!isOpen));
     });
+const genreButtons = document.querySelectorAll(".alpha-genre-btn");
 
+genreButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const genre = button.dataset.genre;
+
+    genreButtons.forEach((btn) => btn.classList.remove("active"));
+    button.classList.add("active");
+
+    searchInputEl.value = genre;
+    runSearch();
+  });
+});
  exploreCards.forEach((card) => {
   if (card === genresCard) return;
 
