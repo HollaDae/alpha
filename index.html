@@ -2549,44 +2549,51 @@ genreButtons.forEach((button) => {
       }).join("");
     }
 
-    async function loadCategory(category, title) {
-      results.innerHTML = '<div class="message">Loading titles…</div>';
-      sectionTitle.textContent = title;
-      sectionSubtitle.textContent = subtitles[category] || "";
-      statusText.textContent = "Updating…";
+async function loadCategory(category, title, genre = "") {
+  results.innerHTML = `<div class="message">Loading titles…</div>`;
+  sectionTitle.textContent = title;
+  sectionSubtitle.textContent = subtitles[category] || "";
+  statusText.textContent = "Updating…";
 
-      try {
-        const response = await fetch(
-          `/api/tmdb?category=${encodeURIComponent(category)}`
-        );
+  try {
+    const params = new URLSearchParams();
+    params.set("category", category);
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || "Unable to load entertainment data.");
-        }
-
-        renderCards(data.results);
-        statusText.textContent = "Live TMDB data";
-      } catch (error) {
-        console.error(error);
-        statusText.textContent = "Connection error";
-
-        results.innerHTML = `
-          <div class="message">
-            Alpha could not load the titles yet.
-            <br />
-            ${escapeHTML(error.message)}
-            <br />
-            <button class="retry" id="retryButton">Try again</button>
-          </div>
-        `;
-
-        document
-          .getElementById("retryButton")
-          ?.addEventListener("click", () => loadCategory(category, title));
-      }
+    if (genre) {
+      params.set("genre", genre);
     }
+
+    const response = await fetch(
+      `/api/tmdb?${params.toString()}`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Unable to load entertainment data.");
+    }
+
+    renderCards(data.results);
+    statusText.textContent = "Live TMDB data";
+  } catch (error) {
+    console.error(error);
+    statusText.textContent = "Connection error";
+
+    results.innerHTML = `
+      <div class="message">
+        Alpha could not load the titles yet.
+        <br />
+        ${escapeHTML(error.message)}
+        <br />
+        <button class="retry" id="retryButton">Try again</button>
+      </div>
+    `;
+
+    document
+      .getElementById("retryButton")
+      ?.addEventListener("click", () => loadCategory(category, title, genre));
+  }
+}
 
     function renderProviders(providers) {
       const groups = [
