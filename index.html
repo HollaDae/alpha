@@ -2340,8 +2340,7 @@ genreButtons.forEach((button) => {
     genreButtons.forEach((btn) => btn.classList.remove("active"));
     button.classList.add("active");
 
-    searchInputEl.value = genre;
-    runSearch();
+ loadCategory("genre", `${button.textContent.trim()} Movies`, genre);
   });
 });
  exploreCards.forEach((card) => {
